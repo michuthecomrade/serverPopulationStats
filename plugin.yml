@@ -1,0 +1,6 @@
+name: "serverPopulationStats"
+description: "This was made for daddy sez; if you ain't sez, you ain't my real father"
+authors:
+- "michu"
+version: "1.0.6.9"
+mainClass: "serverPopulationStats.Main"

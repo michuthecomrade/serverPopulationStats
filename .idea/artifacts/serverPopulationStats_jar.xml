@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="serverPopulationStats:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/serverPopulationStats_jar</output-path>
+    <root id="archive" name="serverPopulationStats.jar">
+      <element id="module-output" name="serverPopulationStats" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/RE_Minecraft.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+    </root>
+  </artifact>
+</component>
