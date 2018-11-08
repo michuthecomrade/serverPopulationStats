@@ -8,20 +8,19 @@ import com.sasha.reminecraft.api.RePlugin;
 import com.sasha.reminecraft.api.event.ChatRecievedEvent;
 import com.sasha.reminecraft.client.ReClient;
 
-import java.io.*;
-import java.time.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class Main extends RePlugin implements SimpleListener {
     private Logger logger = new Logger("ServerPopulationStats");
     private boolean inQueue = true;
-
-    @Override
-    public ReMinecraft getReMinecraft() {
-        return super.getReMinecraft();
-    }
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
     @Override
     public void onPluginInit() {
@@ -30,7 +29,7 @@ public class Main extends RePlugin implements SimpleListener {
     }
 
     @SimpleEventHandler
-    private void inQueue(ChatRecievedEvent e) {
+    private void detectQueueStatus(ChatRecievedEvent e) {
         if (e.messageText.startsWith("<")) {
             inQueue = false;
         }
@@ -43,22 +42,18 @@ public class Main extends RePlugin implements SimpleListener {
     @Override
     public void onPluginEnable() {
         logger.log("MICHU: Plugin serverPopulationStats enabled");
-
-        Timer michutimer = new Timer();
-
-        michutimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (ReClient.ReClientCache.INSTANCE.playerListEntries.size() != 0 && !inQueue) {
-                    writeToFile();
-                }
-
+        executor.scheduleAtFixedRate(() -> {
+            if (ReClient.ReClientCache.INSTANCE.playerListEntries.size() != 0 && !inQueue) {
+                writeToFile();
             }
-        }, 5000, 60 * 1000 /*1 minute */);
+        }, 5L, 60L, TimeUnit.SECONDS);
 
     }
 
-    //this is the method that I wanna call on a timer; it takes the current population numbers and writes them to a file
+    /**
+     *  Method to be called at a fixed rate,
+     *  writes everything to a file and switches to a new file if needed
+     */
     private void writeToFile() {
         //Detecting if the date changed
         String data = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " " + ReClient.ReClientCache.INSTANCE.playerListEntries.size();
@@ -69,6 +64,8 @@ public class Main extends RePlugin implements SimpleListener {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.newLine();
             bw.write(data);
+            bw.flush();
+            fw.flush();
             bw.close();
             fw.close();
         } catch (IOException e) {
@@ -76,15 +73,12 @@ public class Main extends RePlugin implements SimpleListener {
         }
 
 
-
     }
 
 
     @Override
     public void onPluginDisable() {
-
         logger.log("MICHU: Plugin serverPopulationStats disabled");
-        logger.log("MICHU: Closing the writer");
     }
 
     @Override
