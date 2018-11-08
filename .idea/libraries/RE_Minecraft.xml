@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="RE_Minecraft">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/RE_Minecraft.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../reminecraft/RE_Minecraft.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
