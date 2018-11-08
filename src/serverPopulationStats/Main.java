@@ -13,11 +13,8 @@ import java.util.TimerTask;
 
 
 public class Main extends RePlugin implements SimpleListener {
-    //public classes
-    public String filename;
-    public int currentDay = 400;
-    public String data;
-    public PrintWriter writer = null;
+    private int currentDay = 400;
+    private PrintWriter writer = null;
 
 
 
@@ -47,11 +44,11 @@ public class Main extends RePlugin implements SimpleListener {
         
     }
     //this is the method that I wanna call on a timer; it takes the current population numbers and writes them to a file
-    public void writeToFile() {
+    private void writeToFile() {
         //Detecting if the date changed
 
-        filename = "Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
-        data = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " " + ReClient.ReClientCache.INSTANCE.playerListEntries.size();
+        String filename = "Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
+        String data = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " " + ReClient.ReClientCache.INSTANCE.playerListEntries.size();
 
         if(currentDay==400){
             currentDay= LocalDateTime.now().getDayOfYear();
