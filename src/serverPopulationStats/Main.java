@@ -35,10 +35,12 @@ public class Main extends RePlugin implements SimpleListener {
         michutimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                writeToFile();
+                if(ReClient.ReClientCache.INSTANCE.playerListEntries.size() !=0){
+                    writeToFile();
+                }
 
             }
-        }, 5000, 5 * 60 * 1000 /*5 minutes */);
+        }, 5000,  60 * 1000 /*1 minute */);
 
     }
 
@@ -46,11 +48,12 @@ public class Main extends RePlugin implements SimpleListener {
     private void writeToFile() {
         //Detecting if the date changed
         String data = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " " + ReClient.ReClientCache.INSTANCE.playerListEntries.size();
-        String filename = "Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
+        String filename = "/"+LocalDateTime.now().getMonth()+"/Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
 
         try {
             FileWriter fw = new FileWriter(filename, true);
             BufferedWriter bw = new BufferedWriter(fw);
+            bw.newLine();
             bw.write(data);
             bw.close();
             fw.close();
