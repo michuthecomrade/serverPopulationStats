@@ -17,6 +17,7 @@ import java.util.TimerTask;
 public class Main extends RePlugin implements SimpleListener {
     private Logger logger = new Logger("ServerPopulationStats");
     private boolean inQueue = true;
+
     @Override
     public ReMinecraft getReMinecraft() {
         return super.getReMinecraft();
@@ -27,19 +28,20 @@ public class Main extends RePlugin implements SimpleListener {
         this.getReMinecraft().EVENT_BUS.registerListener(this);
         logger.log("MICHU: Plugin serverPopulationStats initiated. Current time is: " + LocalDateTime.now().toString());
     }
+
     @SimpleEventHandler
-    private void inQueue(ChatRecievedEvent e){
-        if(e.messageText.startsWith("<")){
-            inQueue=false;
+    private void inQueue(ChatRecievedEvent e) {
+        if (e.messageText.startsWith("<")) {
+            inQueue = false;
         }
         if (e.messageText.startsWith("2b2t is full")) {
-            inQueue=true;
+            inQueue = true;
         }
 
     }
 
     @Override
-    public void  onPluginEnable() {
+    public void onPluginEnable() {
         logger.log("MICHU: Plugin serverPopulationStats enabled");
 
         Timer michutimer = new Timer();
@@ -47,12 +49,12 @@ public class Main extends RePlugin implements SimpleListener {
         michutimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(ReClient.ReClientCache.INSTANCE.playerListEntries.size() !=0&& !inQueue){
+                if (ReClient.ReClientCache.INSTANCE.playerListEntries.size() != 0 && !inQueue) {
                     writeToFile();
                 }
 
             }
-        }, 5000,  60 * 1000 /*1 minute */);
+        }, 5000, 60 * 1000 /*1 minute */);
 
     }
 
@@ -60,8 +62,8 @@ public class Main extends RePlugin implements SimpleListener {
     private void writeToFile() {
         //Detecting if the date changed
         String data = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " " + ReClient.ReClientCache.INSTANCE.playerListEntries.size();
-        String filename ="Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
-
+        String filename = "Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
+        logger.log("MICHU: Writing current populaton data to file");
         try {
             FileWriter fw = new FileWriter(filename, true);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -72,7 +74,7 @@ public class Main extends RePlugin implements SimpleListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        logger.log("MICHU: Writing current populaton data to file");
+
 
 
     }
