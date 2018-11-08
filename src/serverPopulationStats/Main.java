@@ -1,9 +1,11 @@
 package serverPopulationStats;
 
+import com.sasha.eventsys.SimpleEventHandler;
 import com.sasha.eventsys.SimpleListener;
 import com.sasha.reminecraft.Logger;
 import com.sasha.reminecraft.ReMinecraft;
 import com.sasha.reminecraft.api.RePlugin;
+import com.sasha.reminecraft.api.event.ChatRecievedEvent;
 import com.sasha.reminecraft.client.ReClient;
 
 import java.io.*;
@@ -14,7 +16,7 @@ import java.util.TimerTask;
 
 public class Main extends RePlugin implements SimpleListener {
     private Logger logger = new Logger("ServerPopulationStats");
-
+    private boolean inQueue = true;
     @Override
     public ReMinecraft getReMinecraft() {
         return super.getReMinecraft();
@@ -22,12 +24,22 @@ public class Main extends RePlugin implements SimpleListener {
 
     @Override
     public void onPluginInit() {
-
+        this.getReMinecraft().EVENT_BUS.registerListener(this);
         logger.log("MICHU: Plugin serverPopulationStats initiated. Current time is: " + LocalDateTime.now().toString());
+    }
+    @SimpleEventHandler
+    private void inQueue(ChatRecievedEvent e){
+        if(e.messageText.startsWith("<")){
+            inQueue=false;
+        }
+        if (e.messageText.startsWith("2b2t is full")) {
+            inQueue=true;
+        }
+
     }
 
     @Override
-    public void onPluginEnable() {
+    public void  onPluginEnable() {
         logger.log("MICHU: Plugin serverPopulationStats enabled");
 
         Timer michutimer = new Timer();
@@ -35,7 +47,7 @@ public class Main extends RePlugin implements SimpleListener {
         michutimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(ReClient.ReClientCache.INSTANCE.playerListEntries.size() !=0){
+                if(ReClient.ReClientCache.INSTANCE.playerListEntries.size() !=0&& !inQueue){
                     writeToFile();
                 }
 
