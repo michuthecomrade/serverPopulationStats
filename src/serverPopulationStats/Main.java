@@ -60,7 +60,7 @@ public class Main extends RePlugin implements SimpleListener {
     private void writeToFile() {
         //Detecting if the date changed
         String data = LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + " " + ReClient.ReClientCache.INSTANCE.playerListEntries.size();
-        String filename = "/"+LocalDateTime.now().getMonth()+"/Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
+        String filename ="Population Data: " + LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-" + LocalDateTime.now().getDayOfMonth() + ".txt";
 
         try {
             FileWriter fw = new FileWriter(filename, true);
