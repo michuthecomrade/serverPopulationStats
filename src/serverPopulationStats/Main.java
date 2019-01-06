@@ -33,7 +33,8 @@ public class Main extends RePlugin implements SimpleListener {
         if (e.messageText.startsWith("<")) {
             inQueue = false;
         }
-        if (e.messageText.startsWith("2b2t is full")) {
+        if (e.messageText.startsWith("2b2t is full")
+           || e.messageText.startsWith("Position in queue: ")) {
             inQueue = true;
         }
 
